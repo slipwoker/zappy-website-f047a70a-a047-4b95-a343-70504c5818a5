@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://move-on-f047a70a.zappy5.app/sitemap.xml

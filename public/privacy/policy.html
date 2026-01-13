@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>Policy</title>
+    <meta name="description" content="Policy">
+    <meta name="keywords" content="">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'f047a70a-a047-4b95-a343-70504c5818a5',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/styles.css">
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+</head>
+<body>
+<html lang="\&quot;en\&quot;" dir="\&quot;ltr\&quot;"><head>
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+/* Zappy Attribution Header Styles */
+.zappy-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0px 4px 19px 0px rgba(0,0,0,0.04);
+  padding: 16px 10px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 21px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 21px;
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
+
+    .zappy-header p {
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: baseline;
+      margin-bottom: 0 !important;
+      direction: ltr !important;
+    }
+
+.zappy-header .zappy-link {
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.zappy-header .zappy-link:hover {
+  opacity: 0.7;
+}</style>
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+</head><body>
+
+<!-- Zappy Attribution Header -->
+<div id="zappy-attribution-header" class="zappy-header" style="display: none;">
+  <p>Happily created by&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" class="zappy-link">Zappy</a></p>
+</div>```json
+{
+  "html": "\n\n\n    <meta charset="\&quot;UTF-8\&quot;">\n    <meta name="\&quot;viewport\&quot;" content="\&quot;width=device-width," initial-scale="1.0\&quot;">\n    <meta name="\&quot;description\&quot;" content="\&quot;Privacy" policy="" -="" הובלות="" move="" on.="" learn="" about="" how="" we="" collect,="" use,="" and="" protect="" your="" information.="" comprehensive="" privacy="" center="" highlights.\"="">\n    <meta name="\&quot;robots\&quot;" content="\&quot;index," follow\"="">\n    <title>Privacy Policy | הובלות move on</title>\n    <style>\n        :root {\n            --primary-dark: #1C1E21;\n            --facebook-blue: #0866FF;\n            --link-blue: #385898;\n            --hover-blue: #0064D1;\n            --text-dark: #050505;\n            --text-gray: #65676B;\n            --white: #FFFFFF;\n            --light-bg: #F0F2F5;\n            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);\n            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);\n        }\n\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\n            line-height: 1.6;\n            color: var(--text-dark);\n            background: var(--white);\n            overflow-x: hidden;\n        }\n\n        /* Skip to content for accessibility */\n        .skip-to-content {\n            position: absolute;\n            top: -40px;\n            left: 0;\n            background: var(--facebook-blue);\n            color: white;\n            padding: 8px 16px;\n            text-decoration: none;\n            z-index: 100;\n            border-radius: 0 0 4px 0;\n        }\n\n        .skip-to-content:focus {\n            top: 0;\n        }\n\n        /* Header & Navigation */\n        header {\n            background: var(--white);\n            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n            position: sticky;\n            top: 0;\n            z-index: 1000;\n            transition: all 0.3s ease;\n        }\n\n        .header-container {\n            max-width: 1400px;\n            margin: 0 auto;\n            padding: 0 20px;\n            display: flex;\n            justify-content: space-between;\n            align-items: center;\n            min-height: 70px;\n        }\n\n        .logo-link {\n            display: flex;\n            align-items: center;\n            text-decoration: none;\n            transition: transform 0.3s ease;\n        }\n\n        .logo-link:hover {\n            transform: scale(1.05);\n        }\n\n        .logo {\n            height: 50px;\n            width: auto;\n            object-fit: contain;\n        }\n\n        .main-nav {\n            flex: 1;\n            display: flex;\n            justify-content: flex-end;\n        }\n\n        .nav-menu {\n            display: flex;\n            list-style: none;\n            gap: 8px;\n            align-items: center;\n            flex-wrap: wrap;\n        }\n\n        .nav-item {\n            position: relative;\n        }\n\n        .nav-link {\n            display: block;\n            padding: 8px 16px;\n            color: var(--text-dark);\n            text-decoration: none;\n            font-size: 0.95rem;\n            font-weight: 500;\n            border-radius: 8px;\n            transition: all 0.3s ease;\n            white-space: nowrap;\n        }\n\n        .nav-link:hover {\n            background: var(--light-bg);\n            color: var(--facebook-blue);\n        }\n\n        .nav-link.active {\n            background: var(--facebook-blue);\n            color: var(--white);\n        }\n\n        .nav-link:focus {\n            outline: 2px solid var(--facebook-blue);\n            outline-offset: 2px;\n        }\n\n        .mobile-menu-toggle {\n            display: none;\n            background: none;\n            border: none;\n            font-size: 1.8rem;\n            color: var(--text-dark);\n            cursor: pointer;\n            padding: 8px;\n            border-radius: 8px;\n            transition: background 0.3s ease;\n        }\n\n        .mobile-menu-toggle:hover {\n            background: var(--light-bg);\n        }\n\n        .mobile-menu-toggle:focus {\n            outline: 2px solid var(--facebook-blue);\n            outline-offset: 2px;\n        }\n\n        /* Main Content */\n        main {\n            min-height: calc(100vh - 70px);\n        }\n\n        /* Hero Section */\n        .hero-section {\n            background: linear-gradient(135deg, var(--facebook-blue) 0%, var(--hover-blue) 100%);\n            padding: 100px 20px 80px;\n            position: relative;\n            overflow: hidden;\n        }\n\n        .hero-section::before {\n            content: '';\n            position: absolute;\n            top: 0;\n            left: 0;\n            right: 0;\n            bottom: 0;\n            background: url('https://www.facebook.com/images/assets_DO_NOT_HARDCODE/company_brand_privacy_center_policy/PrivacyPolicy-LogoTree-Hero-16x7-WWW.png') center/cover no-repeat;\n            opacity: 0.1;\n            z-index: 0;\n        }\n\n        .hero-container {\n            max-width: 1200px;\n            margin: 0 auto;\n            text-align: center;\n            position: relative;\n            z-index: 1;\n            animation: fadeInUp 0.8s ease;\n        }\n\n        .hero-title {\n            font-size: 3.5rem;\n            font-weight: 700;\n            color: var(--white);\n            margin-bottom: 20px;\n            line-height: 1.2;\n        }\n\n        .hero-subtitle {\n            font-size: 2rem;\n            color: rgba(255, 255, 255, 0.95);\n            font-weight: 600;\n            margin-bottom: 30px;\n        }\n\n        .hero-description {\n            font-size: 1.2rem;\n            color: rgba(255, 255, 255, 0.9);\n            max-width: 700px;\n            margin: 0 auto;\n        }\n\n        /* Hero Image Section */\n        .hero-image-section {\n            padding: 0;\n            background: var(--white);\n        }\n\n        .hero-image-container {\n            max-width: 1400px;\n            margin: 0 auto;\n        }\n\n        .hero-image {\n            width: 100%;\n            height: auto;\n            display: block;\n        }\n\n        /* Highlights Section */\n        .highlights-section {\n            padding: 80px 20px;\n            background: var(--light-bg);\n        }\n\n        .highlights-container {\n            max-width: 1200px;\n            margin: 0 auto;\n        }\n\n        .section-title {\n            font-size: 2.5rem;\n            font-weight: 700;\n            color: var(--text-dark);\n            text-align: center;\n            margin-bottom: 60px;\n            position: relative;\n            padding-bottom: 20px;\n        }\n\n        .section-title::after {\n            content: '';\n            position: absolute;\n            bottom: 0;\n            left: 50%;\n            transform: translateX(-50%);\n            width: 80px;\n            height: 4px;\n            background: var(--facebook-blue);\n            border-radius: 2px;\n        }\n\n        .highlights-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));\n            gap: 30px;\n            margin-bottom: 40px;\n        }\n\n        .highlight-card {\n            background: var(--white);\n            padding: 40px 30px;\n            border-radius: 16px;\n            box-shadow: var(--shadow);\n            transition: all 0.3s ease;\n            text-align: center;\n            animation: fadeInUp 0.6s ease;\n            animation-fill-mode: both;\n        }\n\n        .highlight-card:nth-child(1) { animation-delay: 0.1s; }\n        .highlight-card:nth-child(2) { animation-delay: 0.2s; }\n        .highlight-card:nth-child(3) { animation-delay: 0.3s; }\n        .highlight-card:nth-child(4) { animation-delay: 0.4s; }\n        .highlight-card:nth-child(5) { animation-delay: 0.5s; }\n        .highlight-card:nth-child(6) { animation-delay: 0.6s; }\n        .highlight-card:nth-child(7) { animation-delay: 0.7s; }\n        .highlight-card:nth-child(8) { animation-delay: 0.8s; }\n        .highlight-card:nth-child(9) { animation-delay: 0.9s; }\n        .highlight-card:nth-child(10) { animation-delay: 1s; }\n\n        .highlight-card:hover {\n            transform: translateY(-8px);\n            box-shadow: var(--shadow-hover);\n        }\n\n        .highlight-icon {\n            width: 80px;\n            height: 80px;\n            margin: 0 auto 20px;\n            background: linear-gradient(135deg, var(--facebook-blue), var(--hover-blue));\n            border-radius: 50%;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            font-size: 2.5rem;\n            color: var(--white);\n        }\n\n        .highlight-title {\n            font-size: 1.3rem;\n            font-weight: 600;\n            color: var(--text-dark);\n            margin-bottom: 10px;\n        }\n\n        .highlight-text {\n            font-size: 1rem;\n            color: var(--text-gray);\n            line-height: 1.6;\n        }\n\n        /* Video Section */\n        .video-section {\n            padding: 80px 20px;\n            background: var(--white);\n        }\n\n        .video-container-wrapper {\n            max-width: 1200px;\n            margin: 0 auto;\n        }\n\n        .video-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));\n            gap: 40px;\n            margin-top: 40px;\n        }\n\n        .video-card {\n            background: var(--light-bg);\n            border-radius: 16px;\n            overflow: hidden;\n            box-shadow: var(--shadow);\n            transition: all 0.3s ease;\n        }\n\n        .video-card:hover {\n            transform: translateY(-5px);\n            box-shadow: var(--shadow-hover);\n        }\n\n        .video-wrapper {\n            position: relative;\n            padding-bottom: 56.25%;\n            height: 0;\n            overflow: hidden;\n        }\n\n        .video-wrapper video {\n            position: absolute;\n            top: 0;\n            left: 0;\n            width: 100%;\n            height: 100%;\n            object-fit: cover;\n        }\n\n        .video-title {\n            padding: 20px;\n            font-size: 1.1rem;\n            font-weight: 600;\n            color: var(--text-dark);\n            text-align: center;\n        }\n\n        /* Image Gallery Section */\n        .gallery-section {\n            padding: 80px 20px;\n            background: var(--light-bg);\n        }\n\n        .gallery-container {\n            max-width: 1200px;\n            margin: 0 auto;\n        }\n\n        .gallery-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));\n            gap: 30px;\n            margin-top: 40px;\n        }\n\n        .gallery-item {\n            background: var(--white);\n            border-radius: 16px;\n            overflow: hidden;\n            box-shadow: var(--shadow);\n            transition: all 0.3s ease;\n        }\n\n        .gallery-item:hover {\n            transform: scale(1.03);\n            box-shadow: var(--shadow-hover);\n        }\n\n        .gallery-image {\n            width: 100%;\n            height: auto;\n            display: block;\n            transition: transform 0.3s ease;\n        }\n\n        .gallery-item:hover .gallery-image {\n            transform: scale(1.05);\n        }\n\n        /* Footer */\n        footer {\n            background: var(--primary-dark);\n            color: var(--white);\n            padding: 60px 20px 30px;\n            margin-top: 80px;\n        }\n\n        .footer-container {\n            max-width: 1200px;\n            margin: 0 auto;\n        }\n\n        .footer-content {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n            gap: 40px;\n            margin-bottom: 40px;\n        }\n\n        .footer-section h3 {\n            font-size: 1.3rem;\n            margin-bottom: 20px;\n            color: var(--white);\n        }\n\n        .footer-links {\n            list-style: none;\n        }\n\n        .footer-links li {\n            margin-bottom: 12px;\n        }\n\n        .footer-links a {\n            color: rgba(255, 255, 255, 0.8);\n            text-decoration: none;\n            transition: color 0.3s ease;\n        }\n\n        .footer-links a:hover {\n            color: var(--facebook-blue);\n        }\n\n        .footer-bottom {\n            text-align: center;\n            padding-top: 30px;\n            border-top: 1px solid rgba(255, 255, 255, 0.1);\n            color: rgba(255, 255, 255, 0.7);\n        }\n\n        /* Animations */\n        @keyframes fadeInUp {\n            from {\n                opacity: 0;\n                transform: translateY(30px);\n            }\n            to {\n                opacity: 1;\n                transform: translateY(0);\n            }\n        }\n\n        @keyframes fadeIn {\n            from {\n                opacity: 0;\n            }\n            to {\n                opacity: 1;\n            }\n        }\n\n        /* Responsive Design */\n        @media (max-width: 1024px) {\n            .nav-menu {\n                gap: 4px;\n            }\n\n            .nav-link {\n                padding: 6px 12px;\n                font-size: 0.9rem;\n            }\n\n            .hero-title {\n                font-size: 2.8rem;\n            }\n\n            .hero-subtitle {\n                font-size: 1.6rem;\n            }\n        }\n\n        @media (max-width: 768px) {\n            .mobile-menu-toggle {\n                display: block;\n            }\n\n            .main-nav {\n                position: fixed;\n                top: 70px;\n                left: 0;\n                right: 0;\n                background: var(--white);\n                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n                max-height: 0;\n                overflow: hidden;\n                transition: max-height 0.3s ease;\n            }\n\n            .main-nav.active {\n                max-height: calc(100vh - 70px);\n                overflow-y: auto;\n            }\n\n            .nav-menu {\n                flex-direction: column;\n                padding: 20px;\n                gap: 0;\n            }\n\n            .nav-item {\n                width: 100%;\n            }\n\n            .nav-link {\n                padding: 12px 16px;\n                width: 100%;\n                border-radius: 8px;\n            }\n\n            .hero-section {\n                padding: 60px 20px 50px;\n            }\n\n            .hero-title {\n                font-size: 2.2rem;\n            }\n\n            .hero-subtitle {\n                font-size: 1.4rem;\n            }\n\n            .hero-description {\n                font-size: 1rem;\n            }\n\n            .section-title {\n                font-size: 2rem;\n            }\n\n            .highlights-grid {\n                grid-template-columns: 1fr;\n            }\n\n            .video-grid {\n                grid-template-columns: 1fr;\n            }\n\n            .gallery-grid {\n                grid-template-columns: 1fr;\n            }\n        }\n\n        @media (max-width: 480px) {\n            .header-container {\n                padding: 0 15px;\n            }\n\n            .logo {\n                height: 40px;\n            }\n\n            .hero-title {\n                font-size: 1.8rem;\n            }\n\n            .hero-subtitle {\n                font-size: 1.2rem;\n            }\n\n            .section-title {\n                font-size: 1.6rem;\n            }\n\n            .highlight-card {\n                padding: 30px 20px;\n            }\n        }\n    </style>\n\n\n    <a href="\&quot;#main-content\&quot;" class="\&quot;skip-to-content\&quot;">Skip to content</a>\n\n    <header role="\&quot;banner\&quot;">\n        <div class="\&quot;header-container\&quot;">\n            <a href="\&quot;/\&quot;" class="\&quot;logo-link\&quot;" aria-label="\&quot;הובלות" move="" on="" -="" home\"="">\n                <img src="assets/move-on-logo.webp" alt="\&quot;הובלות" move="" on\"="" class="\&quot;logo\&quot;">\n            </a>\n            <button class="\&quot;mobile-menu-toggle\&quot;" aria-label="\&quot;Toggle" navigation="" menu\"="" aria-expanded="\&quot;false\&quot;">\n                ☰\n            </button>\n            <nav class="\&quot;main-nav\&quot;" role="\&quot;navigation\&quot;" aria-label="\&quot;Main" navigation\"="">\n                <ul class="\&quot;nav-menu\&quot;">\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/hovalotmoveon\&quot;" class="\&quot;nav-link\&quot;">Hovalotmoveon</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/login/device-based/regular/login/\&quot;" class="\&quot;nav-link\&quot;">Login</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/recover/initiate\&quot;" class="\&quot;nav-link\&quot;">Initiate</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/photo/\&quot;" class="\&quot;nav-link\&quot;">Photo</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/hovalotmoveon/followers/\&quot;" class="\&quot;nav-link\&quot;">Followers</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/hovalotmoveon/following/\&quot;" class="\&quot;nav-link\&quot;">Following</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/hovalotmoveon/about\&quot;" class="\&quot;nav-link\&quot;">אודות</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/hovalotmoveon/reels_tab\&quot;" class="\&quot;nav-link\&quot;">Reels_tab</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/hovalotmoveon/photos\&quot;" class="\&quot;nav-link\&quot;">Photos</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/hovalotmoveon/reviews\&quot;" class="\&quot;nav-link\&quot;">Reviews</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/privacy/policy/\&quot;" class="\&quot;nav-link" active\"="">Policy</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/privacy/policies/health/\&quot;" class="\&quot;nav-link\&quot;">Health</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/policies\&quot;" class="\&quot;nav-link\&quot;">Policies</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/business/\&quot;" class="\&quot;nav-link\&quot;">Business</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/help/568137493302217\&quot;" class="\&quot;nav-link\&quot;">568137493302217</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/policies/cookies/\&quot;" class="\&quot;nav-link\&quot;">Cookies</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/reel/1428964779233574/\&quot;" class="\&quot;nav-link\&quot;">1428964779233574</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/reiad.abase.3\&quot;" class="\&quot;nav-link\&quot;">Reiad.abase.3</a></li>\n                </ul>\n            </nav>\n        </div>\n    </header>\n\n    <main id="\&quot;main-content\&quot;" role="\&quot;main\&quot;">\n        <!-- Hero Section -->\n        <section class="\&quot;hero-section\&quot;" aria-labelledby="\&quot;hero-title\&quot;">\n            <div class="\&quot;hero-container\&quot;">\n                <h1 id="\&quot;hero-title\&quot;" class="\&quot;hero-title\&quot;">Privacy Center</h1>\n                <p class="\&quot;hero-subtitle\&quot;">Privacy Policy</p>\n                <p class="\&quot;hero-description\&quot;">Privacy Center</p>\n            </div>\n        </section>\n\n        <!-- Hero Image -->\n        <section class="\&quot;hero-image-section\&quot;" aria-label="\&quot;Privacy" policy="" overview\"="">\n            <div class="\&quot;hero-image-container\&quot;">\n                <img src="\&quot;https://www.facebook.com/images/assets_DO_NOT_HARDCODE/company_brand_privacy_center_policy/PrivacyPolicy-LogoTree-Hero-16x7-WWW.png\&quot;" alt="\&quot;A" meta="" quest,="" a="" mobile="" phone="" showing="" the="" facebook,="" instagram="" and="" messenger="" apps,="" pair="" of="" ray-ban="" stories="" glasses="" sit="" on="" table.\"="" class="\&quot;hero-image\&quot;" data-image-index="\&quot;2\&quot;">\n            </div>\n        </section>\n\n        <!-- Highlights Section -->\n        <section class="\&quot;highlights-section\&quot;" aria-labelledby="\&quot;highlights-title\&quot;">\n            <div class="\&quot;highlights-container\&quot;">\n                <h2 id="\&quot;highlights-title\&quot;" class="\&quot;section-title\&quot;">Highlights</h2>\n                <div class="\&quot;highlights-grid\&quot;">\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">🔒</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Learn about the key aspects of our privacy policy and how we protect your information.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">📋</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Understand your rights and how you can control your data across our services.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">🛡️</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Discover how we keep your information secure and private at all times.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">👥</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">See how we share information and with whom, always with your privacy in mind.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">⚙️</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Explore the tools and settings available to manage your privacy preferences.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">📱</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Learn about data collection across devices and how we use it to improve your experience.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">🌐</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Understand how we handle international data transfers and comply with global regulations.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">🔍</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Find out how we use your information to personalize content and ads.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">📧</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Learn about our communication practices and how to manage your notification preferences.</p>\n                    </article>\n                    <article class="\&quot;highlight-card\&quot;">\n                        <div class="\&quot;highlight-icon\&quot;" aria-hidden="\&quot;true\&quot;">✅</div>\n                        <h3 class="\&quot;highlight-title\&quot;">Highlights</h3>\n                        <p class="\&quot;highlight-text\&quot;">Review our commitment to transparency and accountability in all privacy matters.</p>\n                    </article>\n                </div>\n            </div>\n        </section>\n\n        <!-- Video Section -->\n        <section class="\&quot;video-section\&quot;" aria-labelledby="\&quot;video-title\&quot;">\n            <div class="\&quot;video-container-wrapper\&quot;">\n                <h2 id="\&quot;video-title\&quot;" class="\&quot;section-title\&quot;">Privacy Policy Videos</h2>\n                <div class="\&quot;video-grid\&quot;">\n                    <article class="\&quot;video-card\&quot;">\n                        <div class="\&quot;video-wrapper\&quot;">\n                            <video controls="" poster="\&quot;/images/assets_DO_NOT_HARDCODE/company_brand_privacy_center_policy/PrivacyPolicy-Video-Thumbnail-Collect.png\&quot;" width="\&quot;100%\&quot;" aria-label="\&quot;Privacy" policy="" video="" about="" data="" collection\"="">\n                                </video></div></article></div></div></section></main>
+    <!-- Legal Footer -->
+    <footer class="legal-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="all-rights-reserved">
+            <p>© 2026 הובלות move on. כל הזכויות שמורות.</p>
+          </div>
+          <div class="footer-social">
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon social-facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon social-instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="social-icon social-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a></div>
+          <div class="footer-legal">
+            <a href="/privacy" aria-label="מדיניות פרטיות">
+              מדיניות פרטיות
+            </a>
+            <span class="separator">|</span>
+            <a href="/accessibility" aria-label="נגישות">
+              נגישות
+            </a>
+            <span class="separator">|</span>
+            <a href="/terms" aria-label="תנאי שימוש">
+              תנאי שימוש
+            </a>
+          </div>
+        </div>
+        <div class="zappy-attribution">
+          <p>נוצר באמצעות&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Zappy</a></p>
+        </div>
+      </div>
+    </footer>
+
+<!-- Zappy Attribution Header Script -->
+<script>
+(function() {
+  var websiteId = 'f047a70a-a047-4b95-a343-70504c5818a5';
+  
+  // Don't show header in preview mode
+  var currentUrl = window.location.href;
+  var isPreview = currentUrl.includes('/preview/') || 
+                  currentUrl.includes('/preview-fullscreen/') || 
+                  currentUrl.includes('localhost:5001') ||
+                  currentUrl.includes('localhost:3000');
+  
+  if (isPreview) {
+    return; // Exit early in preview mode
+  }
+  
+  fetch('https://api.zappy5.com/api/website/' + websiteId + '/tier')
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.showAttribution) {
+        var header = document.getElementById('zappy-attribution-header');
+        if (header) {
+          // Use dynamic announcement content if available
+          if (data.announcement && data.announcement.html) {
+            header.innerHTML = data.announcement.html;
+          }
+          // Apply fixed positioning styles inline (works for existing sites too)
+          header.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99999 !important; display: flex !important; justify-content: center !important; align-items: center !important; text-align: center !important; box-sizing: border-box !important;';
+          // Fix child elements that might have position: fixed from old CSS
+          var children = header.querySelectorAll('*');
+          for (var i = 0; i < children.length; i++) {
+            children[i].style.position = 'static';
+          }
+          // Get header height
+          var headerHeight = header.offsetHeight;
+          // Find and fix navbar to be fixed as well (prevents gap at top of page)
+          var navSelectors = ['nav', '.navbar', '.nav'];
+          var navbar = null;
+          for (var j = 0; j < navSelectors.length; j++) {
+            navbar = document.querySelector(navSelectors[j]);
+            if (navbar && navbar.id !== 'zappy-attribution-header') break;
+            navbar = null;
+          }
+          if (navbar) {
+            var navbarHeight = navbar.offsetHeight;
+            navbar.style.cssText += '; position: fixed !important; top: ' + headerHeight + 'px !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99998 !important;';
+            document.body.style.paddingTop = (headerHeight + navbarHeight) + 'px';
+          } else {
+            document.body.style.paddingTop = headerHeight + 'px';
+          }
+        }
+      }
+    })
+    .catch(function(error) {
+      console.error('Failed to check tier:', error);
+    });
+})();
+</script>
+    <div data-integration="accessibility:toolbar"></div>
+</body></html>
+    <script src="/script.js"></script>
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) { document.querySelectorAll('.mobile-submenu-toggle').forEach(function(b){b.remove();}); document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(m){m.classList.remove('mobile-expanded');}); return; }
+        document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)').forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var sm = li.querySelector('.sub-menu'), pl = li.querySelector(':scope > a') || li.querySelector(':scope > .menu-group-title');
+          if (!sm || !pl) return;
+          var tb = document.createElement('button'); tb.className = 'mobile-submenu-toggle'; tb.setAttribute('aria-label', 'Toggle submenu'); tb.setAttribute('type', 'button');
+          pl.insertAdjacentElement('afterend', tb);
+          tb.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(m) { if (m !== sm) { m.classList.remove('mobile-expanded'); var t = m.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }});
+            sm.classList.toggle('mobile-expanded'); tb.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); } else { initMobileSubmenuToggles(); }
+      window.addEventListener('resize', function() { clearTimeout(window._mrt); window._mrt = setTimeout(initMobileSubmenuToggles, 250); });
+      var observer = new MutationObserver(function(mutations) { mutations.forEach(function(mutation) { if (mutation.type === 'attributes') { var target = mutation.target; if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) { setTimeout(initMobileSubmenuToggles, 100); } } }); });
+      setTimeout(function() { document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) { observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] }); }); }, 500);
+    })();
+    </script>
+</body>
+</html>

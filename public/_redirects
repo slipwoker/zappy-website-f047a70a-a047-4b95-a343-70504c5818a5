@@ -1,0 +1,35 @@
+# Clean URL redirects for Render static hosting
+# These rewrite rules show clean URLs to users while serving .html files
+
+/hovalotmoveon  /hovalotmoveon.html  200
+/login/device-based/regular/login/  /login/device-based/regular/login.html  200
+/recover/initiate  /recover/initiate.html  200
+/photo/  /photo.html  200
+/hovalotmoveon/followers/  /hovalotmoveon/followers.html  200
+/hovalotmoveon/following/  /hovalotmoveon/following.html  200
+/hovalotmoveon/  /hovalotmoveon.html  200
+/hovalotmoveon/about  /hovalotmoveon/about.html  200
+/hovalotmoveon/reels_tab  /hovalotmoveon/reels_tab.html  200
+/hovalotmoveon/photos  /hovalotmoveon/photos.html  200
+/hovalotmoveon/reviews  /hovalotmoveon/reviews.html  200
+/privacy/policy/  /privacy/policy.html  200
+/privacy/policies/health/  /privacy/policies/health.html  200
+/policies  /policies.html  200
+/business/  /business.html  200
+/help/568137493302217  /help/568137493302217.html  200
+/policies/cookies/  /policies/cookies.html  200
+/reel/1428964779233574/  /reel/1428964779233574.html  200
+/reiad.abase.3  /reiad-abase-3.html  200
+/privacy  /privacy.html  200
+/accessibility  /accessibility.html  200
+/terms  /terms.html  200
+
+# Legal pages - redirect old .html URLs to friendly URLs
+/privacy.html  /privacy  301
+/accessibility.html  /accessibility  301
+/terms.html  /terms  301
+
+/  /index.html  200
+
+# 404 fallback
+/*  /index.html  404

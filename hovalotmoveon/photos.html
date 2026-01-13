@@ -1,0 +1,1128 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse our photo gallery showcasing הובלות move on professional moving services. View our work and see why we're trusted for quality relocations.">
+    <meta name="robots" content="index, follow">
+    <title>Photos</title>
+    <style>
+        :root {
+            --primary-dark: #1C1E21;
+            --facebook-blue: #0866FF;
+            --link-blue: #385898;
+            --hover-blue: #0064D1;
+            --text-dark: #050505;
+            --text-gray: #65676B;
+            --white: #ffffff;
+            --light-bg: #f8f9fa;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--white);
+        }
+
+        /* Skip to content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--facebook-blue);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .main-nav {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            background-color: var(--light-bg);
+            color: var(--facebook-blue);
+        }
+
+        .nav-link:focus {
+            outline: 2px solid var(--facebook-blue);
+            outline-offset: 2px;
+        }
+
+        .nav-link.active {
+            background-color: var(--facebook-blue);
+            color: var(--white);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            padding: 0.5rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--facebook-blue) 0%, var(--hover-blue) 100%);
+            color: var(--white);
+            padding: 80px 2rem 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none"/><path d="M0 50 Q 25 25, 50 50 T 100 50" stroke="rgba(255,255,255,0.1)" fill="none" stroke-width="2"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 80px 2rem;
+            background-color: var(--light-bg);
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-intro {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .section-intro h2 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .section-intro p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            animation: fadeIn 1s ease;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-overlay p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--white);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close:hover {
+            background: var(--facebook-blue);
+            color: var(--white);
+            transform: rotate(90deg);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 60px 2rem 30px;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--facebook-blue);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-nav {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                box-shadow: var(--shadow);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .main-nav.active {
+                max-height: 500px;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+            }
+
+            .nav-link {
+                padding: 1rem;
+                border-bottom: 1px solid var(--light-bg);
+            }
+
+            .hero-section {
+                padding: 60px 1.5rem 40px;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .gallery-section {
+                padding: 60px 1.5rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .section-intro h2 {
+                font-size: 2rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<style>
+/* Zappy Attribution Header Styles */
+.zappy-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0px 4px 19px 0px rgba(0,0,0,0.04);
+  padding: 16px 10px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 21px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 21px;
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
+
+    .zappy-header p {
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: baseline;
+      margin-bottom: 0 !important;
+      direction: ltr !important;
+    }
+
+.zappy-header .zappy-link {
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.zappy-header .zappy-link:hover {
+  opacity: 0.7;
+}</style>
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+<!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'f047a70a-a047-4b95-a343-70504c5818a5',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- Zappy Attribution Header -->
+<div id="zappy-attribution-header" class="zappy-header" style="display: none;">
+  <p>Happily created by&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" class="zappy-link">Zappy</a></p>
+</div>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <header role="banner">
+        <div class="header-container">
+            <a href="/" class="logo-link" aria-label="הובלות move on - Home">
+                <img src="/assets/move-on-logo.webp" alt="הובלות move on" class="logo">
+            </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                ☰
+            </button>
+            <nav class="main-nav" role="navigation" aria-label="Main navigation">
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/hovalotmoveon" class="nav-link">Hovalotmoveon</a></li>
+                    <li class="nav-item"><a href="/login/device-based/regular/login/" class="nav-link">Login</a></li>
+                    <li class="nav-item"><a href="/recover/initiate" class="nav-link">Initiate</a></li>
+                    <li class="nav-item"><a href="/photo/" class="nav-link">Photo</a></li>
+                    <li class="nav-item"><a href="/hovalotmoveon/followers/" class="nav-link">Followers</a></li>
+                    <li class="nav-item"><a href="/hovalotmoveon/following/" class="nav-link">Following</a></li>
+                    <li class="nav-item"><a href="/hovalotmoveon/about" class="nav-link">אודות</a></li>
+                    <li class="nav-item"><a href="/hovalotmoveon/reels_tab" class="nav-link">Reels_tab</a></li>
+                    <li class="nav-item"><a href="/hovalotmoveon/photos" class="nav-link active">Photos</a></li>
+                    <li class="nav-item"><a href="/hovalotmoveon/reviews" class="nav-link">Reviews</a></li>
+                    <li class="nav-item"><a href="/privacy/policy/" class="nav-link">Policy</a></li>
+                    <li class="nav-item"><a href="/business/" class="nav-link">Business</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" role="main">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>הובלות move on</h1>
+                <p class="subtitle">Photos</p>
+            </div>
+        </section>
+
+        <section class="gallery-section">
+            <div class="gallery-container">
+                <div class="section-intro">
+                    <h2>Our Work Gallery</h2>
+                    <p>Explore our collection of professional moving services. Each image represents our commitment to quality and customer satisfaction.</p>
+                </div>
+
+                <div class="gallery-grid">
+                    <article class="gallery-item" data-lightbox="0">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="0" alt="Professional moving service" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/550837534_1236489994948892_628752320861321878_n.jpg?stp=dst-jpg_s206x206_tt6&amp;_nc_cat=101&amp;ccb=1-7&amp;_nc_sid=714c7a&amp;_nc_ohc=p1CAF7fjb2oQ7kNvwEDO9XZ&amp;_nc_oc=AdmFYRJVNcZqriFj4h6FfEpgwF_4PvTSumg1SDD0UpLe7A1ZDfIHKDCcqGeK9-98wSM&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_Afoi95Grjh1ufMRpi0sFdHmNZ28A4ZcYhaRk4h1Kvom2Cg&amp;oe=696BC234">
+                        <div class="gallery-overlay">
+                            <h3>Professional Service</h3>
+                            <p>Quality moving solutions</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="1">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="1" alt="Moving equipment and tools" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t51.75761-15/489816298_18038387858618103_7636406144373895964_n.webp?stp=dst-jpg_s206x206_tt6&amp;_nc_cat=102&amp;ccb=1-7&amp;_nc_sid=714c7a&amp;_nc_ohc=a_raasUXu6MQ7kNvwG6Idh9&amp;_nc_oc=Adl-cFPz2BxoaBOO-wRkEJIOZi-v3yc1K_ny9NToyps6Dx3icQYDX3WaXHU1j3K2r1o&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_Afr0H0cMCB90ZfT5BPyMRta3NZmyecXplSMImWmBK9hokg&amp;oe=696B9B08">
+                        <div class="gallery-overlay">
+                            <h3>Modern Equipment</h3>
+                            <p>State-of-the-art tools</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="2">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="2" alt="Successful relocation project" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/482009066_1084114226853137_3112758331753545231_n.jpg?stp=c0.169.1536.1536a_dst-jpg_s206x206_tt6&amp;_nc_cat=111&amp;ccb=1-7&amp;_nc_sid=50ad20&amp;_nc_ohc=9ztWFr96rYYQ7kNvwHBXcgX&amp;_nc_oc=AdmnuMoAvDs6aAuexKnuvLhmYU0cZXv5lifJAFOol70HprCyx9yYNexNDyj7ERWL_zc&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_Afo2V6k1uSBrKzAdk1ux5M5yLBKFcI3oMXBj-o7AsG_80Q&amp;oe=696BA1FF">
+                        <div class="gallery-overlay">
+                            <h3>Successful Projects</h3>
+                            <p>Satisfied customers</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="3">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="3" alt="Professional moving team" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/481677980_1084114293519797_4864850380658049415_n.jpg?stp=c256.0.1536.1536a_dst-jpg_s206x206_tt6&amp;_nc_cat=104&amp;ccb=1-7&amp;_nc_sid=50ad20&amp;_nc_ohc=WmOPcPnE4nAQ7kNvwHl6340&amp;_nc_oc=AdmBL8IuS61JZpoveGbpAN94LkKSmL7D2yFqcPQq0J9A5kxYzzjIyE3ScDXS0bvi-0M&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_Afr9NVyklUGMm8LHeXB0h8cQw_hKEPfra3x89OBZreVsbA&amp;oe=696B98FE">
+                        <div class="gallery-overlay">
+                            <h3>Expert Team</h3>
+                            <p>Trained professionals</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="4">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="4" alt="Secure packing services" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/480750841_1077517634179463_2924693691553000397_n.jpg?stp=c0.295.1153.1153a_dst-jpg_s206x206_tt6&amp;_nc_cat=107&amp;ccb=1-7&amp;_nc_sid=50ad20&amp;_nc_ohc=EECM7gitGpgQ7kNvwHgNW-M&amp;_nc_oc=Adn8ld923Px3U5TlfK2wJibJZMdfPMA190sKrJ5SDRRfTdcuDp8kkMOpkv6zAvluIEY&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_AfomZK_CxJFBuFeST8YRE4eeJkJTIKDDZXhTR-3xxXZlyw&amp;oe=696BC4F5">
+                        <div class="gallery-overlay">
+                            <h3>Secure Packing</h3>
+                            <p>Safe handling guaranteed</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="5">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="5" alt="Moving truck and equipment" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/481271733_1077468304184396_10688238459706374_n.jpg?stp=c380.0.558.558a_dst-jpg_s206x206_tt6&amp;_nc_cat=102&amp;ccb=1-7&amp;_nc_sid=714c7a&amp;_nc_ohc=jEaxXH-VgzgQ7kNvwErWE4A&amp;_nc_oc=AdlhC2ywgM3J5vmCR0g5WUtjkN0GZg2akcfN1D4DxREkQqQI66hWji2QK8VhrL7ubd8&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_AfqX82SN5StkC4XxTm3CjVZQ5X4BSHCNQrcfbt6wOgibZw&amp;oe=696BB858">
+                        <div class="gallery-overlay">
+                            <h3>Fleet Vehicles</h3>
+                            <p>Modern moving trucks</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="6">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="6" alt="Completed moving project" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/481233103_1074168994514327_5720534210002779714_n.jpg?stp=dst-jpg_s206x206_tt6&amp;_nc_cat=111&amp;ccb=1-7&amp;_nc_sid=50ad20&amp;_nc_ohc=eROe61uk_9EQ7kNvwFrU_dR&amp;_nc_oc=AdlPbpjV-zBYPFVc4hEFcWV0CJJgEPX7vFmcSMuWLxOUYtSsp4nPCH6Jr-Adyr6e6Ro&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_AfrY37kE-h22EDIkLqoiV8DrPGs-GzRt6GBN6TGjrGTYyw&amp;oe=696BA53B">
+                        <div class="gallery-overlay">
+                            <h3>Completed Moves</h3>
+                            <p>On-time delivery</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="7">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="7" alt="Professional moving service in action" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/481065664_1074169067847653_1968504383997338842_n.jpg?stp=c0.169.1536.1536a_dst-jpg_s206x206_tt6&amp;_nc_cat=101&amp;ccb=1-7&amp;_nc_sid=50ad20&amp;_nc_ohc=gQm320fvLVgQ7kNvwF2NMqC&amp;_nc_oc=AdkxfuvSUbGHErgc8bsddnqmNyZFmoqA2Ukli-kYT7UKsvg30WuUcF3j7jg50LuhZq4&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_AfoMW-lZyvEA0r7IuZQGuIgCx7xggUosQVBC2zkxHv1GeQ&amp;oe=696B98E5">
+                        <div class="gallery-overlay">
+                            <h3>Service Excellence</h3>
+                            <p>Quality you can trust</p>
+                        </div>
+                    </article>
+
+                    <article class="gallery-item" data-lightbox="8">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&amp;h=800&amp;fit=crop" data-image-index="8" alt="Moving services showcase" loading="lazy" data-placeholder="true" data-original-url="https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/479697773_2085483795255675_1003543483592219764_n.jpg?stp=dst-jpg_fb50_s320x320_tt6&amp;_nc_cat=108&amp;ccb=1-7&amp;_nc_sid=cc71e4&amp;_nc_ohc=S8X4d1dQceQQ7kNvwHsG-gr&amp;_nc_oc=AdnggX3L6uIfpSCPnoFM9txnknTm62TgsyqVLibdX2gEte0vm3qr-_iZqtAriUjevfY&amp;_nc_zt=23&amp;_nc_ht=scontent-den2-1.xx&amp;_nc_gid=F8dpJFc7ftj-WvQEQEbnlQ&amp;oh=00_AfrZLuPe9y_jGGBIyQb4TBoDrrNeL6IzmdV6bxSKsFtfkg&amp;oe=696BC03D">
+                        <div class="gallery-overlay">
+                            <h3>Our Services</h3>
+                            <p>Comprehensive solutions</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" aria-label="Close lightbox">×</button>
+        <div class="lightbox-content">
+            <img src="" alt="" id="lightbox-img">
+        </div>
+    </div>
+
+    
+    <!-- Legal Footer -->
+    <footer class="legal-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="all-rights-reserved">
+            <p>© 2026 הובלות move on. כל הזכויות שמורות.</p>
+          </div>
+          <div class="footer-social">
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon social-facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon social-instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="social-icon social-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a></div>
+          <div class="footer-legal">
+            <a href="/privacy" aria-label="מדיניות פרטיות">
+              מדיניות פרטיות
+            </a>
+            <span class="separator">|</span>
+            <a href="/accessibility" aria-label="נגישות">
+              נגישות
+            </a>
+            <span class="separator">|</span>
+            <a href="/terms" aria-label="תנאי שימוש">
+              תנאי שימוש
+            </a>
+          </div>
+        </div>
+        <div class="zappy-attribution">
+          <p>נוצר באמצעות&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Zappy</a></p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mainNav = document.querySelector('.main-nav');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            const isExpanded = mainNav.classList.contains('active');
+            mobileMenuToggle.setAttribute('aria-expanded', isExpanded);
+        });
+
+        // Lightbox functionality
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.querySelector('.lightbox-close');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                lightboxImg.src = img.src.replace('s206x206', 's960x960');
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            item.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.click();
+                }
+            });
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Smooth scroll for skip link
+        document.querySelector('.skip-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('main-content').focus();
+            document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Add tabindex to gallery items for keyboard navigation
+        galleryItems.forEach(item => {
+            item.setAttribute('tabindex', '0');
+        });
+    </script>
+
+
+<!-- Zappy Attribution Header Script -->
+<script>
+(function() {
+  var websiteId = 'f047a70a-a047-4b95-a343-70504c5818a5';
+  
+  // Don't show header in preview mode
+  var currentUrl = window.location.href;
+  var isPreview = currentUrl.includes('/preview/') || 
+                  currentUrl.includes('/preview-fullscreen/') || 
+                  currentUrl.includes('localhost:5001') ||
+                  currentUrl.includes('localhost:3000');
+  
+  if (isPreview) {
+    return; // Exit early in preview mode
+  }
+  
+  fetch('https://api.zappy5.com/api/website/' + websiteId + '/tier')
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.showAttribution) {
+        var header = document.getElementById('zappy-attribution-header');
+        if (header) {
+          // Use dynamic announcement content if available
+          if (data.announcement && data.announcement.html) {
+            header.innerHTML = data.announcement.html;
+          }
+          // Apply fixed positioning styles inline (works for existing sites too)
+          header.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99999 !important; display: flex !important; justify-content: center !important; align-items: center !important; text-align: center !important; box-sizing: border-box !important;';
+          // Fix child elements that might have position: fixed from old CSS
+          var children = header.querySelectorAll('*');
+          for (var i = 0; i < children.length; i++) {
+            children[i].style.position = 'static';
+          }
+          // Get header height
+          var headerHeight = header.offsetHeight;
+          // Find and fix navbar to be fixed as well (prevents gap at top of page)
+          var navSelectors = ['nav', '.navbar', '.nav'];
+          var navbar = null;
+          for (var j = 0; j < navSelectors.length; j++) {
+            navbar = document.querySelector(navSelectors[j]);
+            if (navbar && navbar.id !== 'zappy-attribution-header') break;
+            navbar = null;
+          }
+          if (navbar) {
+            var navbarHeight = navbar.offsetHeight;
+            navbar.style.cssText += '; position: fixed !important; top: ' + headerHeight + 'px !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99998 !important;';
+            document.body.style.paddingTop = (headerHeight + navbarHeight) + 'px';
+          } else {
+            document.body.style.paddingTop = headerHeight + 'px';
+          }
+        }
+      }
+    })
+    .catch(function(error) {
+      console.error('Failed to check tier:', error);
+    });
+})();
+</script>
+    <div data-integration="accessibility:toolbar"></div>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+    <script src="/script.js"></script>
+</body></html>
